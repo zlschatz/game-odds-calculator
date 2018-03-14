@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
+import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 import './App.css';
 
 class Odds extends Component {
 	render() {
 	  return (
-	    <div>American Odds: 
-	      <input 
-		    type="text" 
-		    placeholder="+110"
-            value={(this.props.odds)}
-		    onChange={this.props.onChange}
-	      />
-	    </div>
+        <TextField
+          hintText="+110"
+          floatingLabelText="American Odds"
+          value={(this.props.odds)}
+          onChange={this.props.onChange}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+        />
 	  );
 	}
 }
@@ -19,14 +23,15 @@ class Odds extends Component {
 class Bet extends Component {
     render() {
       return (
-        <div>Bet Amount ($): 
-          <input 
-            type="text" 
-            placeholder="100"
-            value={(this.props.bet)}
-            onChange={this.props.onChange}
-          />
-        </div>
+        <TextField
+          hintText="100"
+          floatingLabelText="Bet Amount ($)"
+          value={(this.props.bet)}
+          onChange={this.props.onChange}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+        />
       );
     }
 }
@@ -34,13 +39,14 @@ class Bet extends Component {
 class Win extends Component {
     render() {
       return (
-        <div>To Win ($):
-          <input 
-            type="text"
-            value={(this.props.win)}
-            onChange={this.props.onChange}
-          />
-        </div>
+        <TextField
+          floatingLabelText="To Win ($)"
+          value={(this.props.win)}
+          onChange={this.props.onChange}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+        />
       );
     }
 }
@@ -48,13 +54,14 @@ class Win extends Component {
 class Payout extends Component {
 	render() {
 	  return (
-	    <div>Payout ($):
-	      <input 
-		    type="text"
-            value={(this.props.payout).toFixed(2)}
-            disabled={true}
-	      />
-	    </div>
+        <TextField
+          floatingLabelText="Payout ($)"
+          value={(this.props.payout).toFixed(2)}
+          disabled={true}
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+        />
 	  );
 	}
 }
@@ -63,13 +70,12 @@ class Calculator extends Component {
 	constructor(props) {
 	  super(props);
 
-	  this.state = {
-	    odds: 0,
-	    bet: 0,
-	    win: 0,
-        payout: 0
-	  }
+	  this.state = initialState;
 	}
+
+    clearState() {
+        this.setState(initialState);
+    }
 
     calculateWin() {
       if (this.state.odds > 0) {
@@ -120,16 +126,50 @@ class Calculator extends Component {
 	render() {
 	  return (
 	  <div>
-		<Odds odds={this.state.odds} onChange={(event) => this.handleChange(event, 'odds')}/>
-		{/*<div>Decimal Odds: <input type="text" /></div>
-		<div>Fractional Odds: <input type="text" /></div>
-		<div>Implied Odds: <input type="text" /></div>*/}
+      <Card>
+        <CardTitle title="What Are the Odds?" subtitle="A Game Calculator" />
+        <CardText>
+        <Odds odds={this.state.odds} onChange={(event) => this.handleChange(event, 'odds')}/>
+        <br />
+        {/*<div>Decimal Odds: <input type="text" /></div>
+        <div>Fractional Odds: <input type="text" /></div>
+        <div>Implied Odds: <input type="text" /></div>*/}
         <Bet bet={this.state.bet} onChange={(event) => this.handleChange(event, 'bet')}/>
+        <br />
         <Win win={this.state.win} onChange={(event) => this.handleChange(event, 'win')}/>
-		<Payout payout={this.state.payout}/>
+        <br />
+        <Payout payout={this.state.payout}/>
+        </CardText>
+        <CardActions>
+          <FlatButton label="Reset" onClick={() => this.clearState()} />
+        </CardActions>
+      </Card>
+		
 	  </div>
       );
 	}
 }
+
+const initialState = {
+    odds: 0,
+    bet: 0,
+    win: 0,
+    payout: 0
+}
+
+const styles = {
+  errorStyle: {
+    color: 'grey',
+  },
+  underlineStyle: {
+    borderColor: 'grey',
+  },
+  floatingLabelStyle: {
+    color: 'grey',
+  },
+  floatingLabelFocusStyle: {
+    color: 'grey',
+  },
+};
 
 export default Calculator;
