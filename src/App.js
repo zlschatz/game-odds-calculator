@@ -8,7 +8,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <div className="App spaceGradient">
+        <div className="App">
           <div className="App-intro">
             <Calculator />
           </div>

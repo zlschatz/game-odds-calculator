@@ -126,7 +126,7 @@ class Calculator extends Component {
 	render() {
 	  return (
 	  <div>
-      <Card className="spaceGradient">
+      <Card>
         <CardTitle title="What Are the Odds?" subtitle="A Game Calculator" />
         <CardText>
         <Odds odds={this.state.odds} onChange={(event) => this.handleChange(event, 'odds')}/>
