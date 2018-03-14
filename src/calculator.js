@@ -70,13 +70,12 @@ class Calculator extends Component {
 	constructor(props) {
 	  super(props);
 
-	  this.state = {
-	    odds: 0,
-	    bet: 0,
-	    win: 0,
-        payout: 0
-	  }
+	  this.state = initialState;
 	}
+
+    clearState() {
+        this.setState(initialState);
+    }
 
     calculateWin() {
       if (this.state.odds > 0) {
@@ -149,6 +148,13 @@ class Calculator extends Component {
 	  </div>
       );
 	}
+}
+
+const initialState = {
+    odds: 0,
+    bet: 0,
+    win: 0,
+    payout: 0
 }
 
 const styles = {
