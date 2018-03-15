@@ -5,26 +5,26 @@ import TextField from 'material-ui/TextField';
 import './App.css';
 
 class Odds extends Component {
-	render() {
-	  return (
+  render() {
+    return (
         <TextField
-          hintText="+110"
-          floatingLabelText="American Odds"
+          hintText="ex. +110 or 5/2"
+          floatingLabelText="Odds"
           value={(this.props.odds) ? (this.props.odds) : ''}
           onChange={this.props.onChange}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
-	  );
-	}
+    );
+  }
 }
 
 class Bet extends Component {
     render() {
       return (
         <TextField
-          hintText="100"
+          hintText="ex. 100"
           floatingLabelText="Bet Amount ($)"
           value={(this.props.bet > 0) ? (this.props.bet) : ''}
           onChange={this.props.onChange}
@@ -41,7 +41,7 @@ class Win extends Component {
     render() {
       return (
         <TextField
-          hintText="1000"
+          hintText="ex. 1000"
           floatingLabelText="To Win ($)"
           value={(isFinite(this.props.win) && (this.props.win > 0)) ? (this.props.win) : ''}
           onChange={this.props.onChange}
@@ -76,55 +76,66 @@ class Calculator extends Component {
 	  this.state = initialState;
 	}
 
-    clearState() {
-        this.setState(initialState);
-    }
+  clearState() {
+      this.setState(initialState);
+  }
 
-    calculateWin() {
-      if (this.state.odds > 0) {
-        this.setState({win: (this.state.odds * (this.state.bet/100)).toFixed(2)}, function () {
-          this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+  convertOdds(odds) {
+    if ((odds).includes('/') && (odds.split('/')[1] !== '')) {
+      var fraction = odds.split('/');
+      return ((fraction[0] / fraction[1]) * 100);
+    } else {
+      return odds
+    }
+  }
+
+  calculateWin() {
+    var odds = this.convertOdds(this.state.odds);
+    if (odds > 0) {
+      this.setState({win: (odds * (this.state.bet/100)).toFixed(2)}, function () {
+        this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+      });
+    } else {
+      this.setState({win: ((100/Math.abs(odds)) * this.state.bet).toFixed(2)}, function () {
+        this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+      });
+    }
+  }
+
+  calculateFromWin() {
+    var odds = this.convertOdds(this.state.odds);
+    if (odds > 0) {
+      this.setState({bet: ((this.state.win / odds) * 100).toFixed(2)}, function () {
+        this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+      });
+    } else {
+      this.setState({bet: (this.state.win / (100/Math.abs(odds))).toFixed(2)}, function () {
+        this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+      });
+    }
+  }
+
+  handleChange = (event, key) => {
+    switch(key) {
+      case 'odds':
+        this.setState({ odds: event.target.value }, function () {
+          this.calculateWin();
         });
-      } else {
-        this.setState({win: ((100/Math.abs(this.state.odds)) * this.state.bet).toFixed(2)}, function () {
-          this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
-        }); 
-      }
-    }
-
-    calculateFromWin() {
-      if (this.state.odds > 0) {
-        this.setState({bet: ((this.state.win / this.state.odds) * 100).toFixed(2)}, function () {
-          this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
+        break;
+      case 'bet':
+        this.setState({ bet: event.target.value }, function () {
+          this.calculateWin();
         });
-      } else {
-        this.setState({bet: (this.state.win / (100/Math.abs(this.state.odds))).toFixed(2)}, function () {
-          this.setState({payout: (parseFloat(this.state.bet) + parseFloat(this.state.win))});
-        }); 
-      }
-    }
-
-	handleChange = (event, key) => {
-	  switch(key) {
-        case 'odds':
-    	    this.setState({ odds: event.target.value }, function () {
-            this.calculateWin();
-          });
-          break;
-        case 'bet':
-          this.setState({ bet: event.target.value }, function () {
-            this.calculateWin();
-          });
-          break;
-        case 'win':
-          this.setState({ win: event.target.value }, function () {
-            this.calculateFromWin();
-		  });
-		  break;
-	    default:
-		  break;
+        break;
+      case 'win':
+        this.setState({ win: event.target.value }, function () {
+          this.calculateFromWin();
+        });
+        break;
+      default:
+        break;
       };
-	}
+  }
 
 	render() {
 	  return (
@@ -134,9 +145,6 @@ class Calculator extends Component {
         <CardText>
         <Odds odds={this.state.odds} onChange={(event) => this.handleChange(event, 'odds')}/>
         <br />
-        {/*<div>Decimal Odds: <input type="text" /></div>
-        <div>Fractional Odds: <input type="text" /></div>
-        <div>Implied Odds: <input type="text" /></div>*/}
         <Bet bet={this.state.bet} odds={this.state.odds} onChange={(event) => this.handleChange(event, 'bet')}/>
         <br />
         <Win win={this.state.win} odds={this.state.odds} onChange={(event) => this.handleChange(event, 'win')}/>
