@@ -31,6 +31,7 @@ class Bet extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+          disabled={(this.props.odds) ? false : true}
         />
       );
     }
@@ -47,6 +48,7 @@ class Win extends Component {
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+          disabled={(this.props.odds) ? false : true}
         />
       );
     }
@@ -105,7 +107,7 @@ class Calculator extends Component {
 	handleChange = (event, key) => {
 	  switch(key) {
         case 'odds':
-    	  this.setState({ odds: event.target.value }, function () {
+    	    this.setState({ odds: event.target.value }, function () {
             this.calculateWin();
           });
           break;
@@ -135,9 +137,9 @@ class Calculator extends Component {
         {/*<div>Decimal Odds: <input type="text" /></div>
         <div>Fractional Odds: <input type="text" /></div>
         <div>Implied Odds: <input type="text" /></div>*/}
-        <Bet bet={this.state.bet} onChange={(event) => this.handleChange(event, 'bet')}/>
+        <Bet bet={this.state.bet} odds={this.state.odds} onChange={(event) => this.handleChange(event, 'bet')}/>
         <br />
-        <Win win={this.state.win} onChange={(event) => this.handleChange(event, 'win')}/>
+        <Win win={this.state.win} odds={this.state.odds} onChange={(event) => this.handleChange(event, 'win')}/>
         <br />
         <Payout payout={this.state.payout}/>
         </CardText>
