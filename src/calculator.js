@@ -10,7 +10,7 @@ class Odds extends Component {
         <TextField
           hintText="+110"
           floatingLabelText="American Odds"
-          value={(this.props.odds)}
+          value={(this.props.odds) ? (this.props.odds) : ''}
           onChange={this.props.onChange}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
@@ -26,7 +26,7 @@ class Bet extends Component {
         <TextField
           hintText="100"
           floatingLabelText="Bet Amount ($)"
-          value={(this.props.bet)}
+          value={(this.props.bet > 0) ? (this.props.bet) : ''}
           onChange={this.props.onChange}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
@@ -40,8 +40,9 @@ class Win extends Component {
     render() {
       return (
         <TextField
+          hintText="1000"
           floatingLabelText="To Win ($)"
-          value={(this.props.win)}
+          value={(isFinite(this.props.win) && (this.props.win > 0)) ? (this.props.win) : ''}
           onChange={this.props.onChange}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
@@ -56,7 +57,7 @@ class Payout extends Component {
 	  return (
         <TextField
           floatingLabelText="Payout ($)"
-          value={(this.props.payout).toFixed(2)}
+          value={(isFinite(this.props.payout) && (this.props.payout > 0)) ? (this.props.payout) : ''}
           disabled={true}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineStyle}
