@@ -82,7 +82,7 @@ class Calculator extends Component {
 
   convertOdds(odds) {
     if ((odds).includes('/') && (odds.split('/')[1] !== '')) {
-      var fraction = odds.split('/');
+      var fraction = odds.replace('-', '').split('/'); //Discard (-) for fractional odds
       return ((fraction[0] / fraction[1]) * 100);
     } else {
       return odds
